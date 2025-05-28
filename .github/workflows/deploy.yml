@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # <- Explicitly use a known-good runner
 
     steps:
       - name: Checkout source code
@@ -35,7 +35,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # <- Also use 22.04 here
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
