@@ -11,11 +11,14 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04  # <- Explicitly use a known-good runner
+  deploy:
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Hugo
@@ -24,23 +27,14 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build site with Hugo
+      - name: Build with Hugo
         run: hugo --minify
 
-      - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages
           path: ./public
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-22.04  # <- Also use 22.04 here
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
