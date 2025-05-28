@@ -3,7 +3,7 @@ name: Deploy Hugo site to GitHub Pages
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main  # or your primary branch
 
 permissions:
   contents: read
@@ -24,12 +24,13 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build
+      - name: Build with Hugo
         run: hugo --minify
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload artifact (required for deploy-pages)
+        uses: actions/upload-artifact@v3
         with:
+          name: github-pages
           path: ./public
 
   deploy:
